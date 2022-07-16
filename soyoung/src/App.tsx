@@ -5,7 +5,7 @@ function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState<string[]>([]);
 
-  const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     /*
     React projects that don't include the DOM library need these interfaces to compile.
     React Native applications use React, but there is no DOM available. The JavaScript runtime
@@ -20,12 +20,19 @@ function App() {
     setNewTodo("");
   };
 
-  const todoItem = (todoText: string) => (
+  const deleteTodo = (index: number) => {
+    setTodos([
+      ...todos.slice(0, index),
+      ...todos.slice(index + 1, todos.length),
+    ]);
+  };
+
+  const todoItem = (todoText: string, index: number) => (
     <li>
       <div className="view">
         <input className="toggle" type="checkbox" />
         <label className="label">{todoText}</label>
-        <button className="destroy"></button>
+        <button className="destroy" onClick={() => deleteTodo(index)}></button>
       </div>
       <input className="edit" value={todoText} />
     </li>
@@ -43,13 +50,14 @@ function App() {
           onChange={(e) => setNewTodo(e.target.value)}
           // onKeyDown으로 하면 한글 입력 시 isComposing 이슈로 인해 마지막 글자가 중복으로 입력되는데
           // React.KeyboardEvent<T> interface에 isComposing 속성이 구현되어있지 않아서 onKeyUp으로 대체
+          // 관련 링크 - https://levelup.gitconnected.com/javascript-events-handlers-keyboard-and-load-events-1b3e46a6b0c3
           onKeyUp={onPressEnter}
         />
       </div>
       <div className="main">
         <input className="toggle-all" type="checkbox" />
         <ul id="todo-list" className="todo-list">
-          {todos.map((todo) => todoItem(todo))}
+          {todos.map((todo, index) => todoItem(todo, index))}
           {/* <li>
             <div className="view">
               <input className="toggle" type="checkbox" />
