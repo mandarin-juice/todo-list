@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import "./App.css";
 
+interface todo {
+  text: string;
+  completed: boolean;
+}
+
 function App() {
   const [newTodo, setNewTodo] = useState("");
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useState<todo[]>([]);
 
   const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     /*
@@ -16,7 +21,7 @@ function App() {
     */
     // if (e.isComposing)
     if (e.key !== "Enter" || !newTodo) return;
-    setTodos([...todos, newTodo]);
+    setTodos([...todos, { text: newTodo, completed: false }]);
     setNewTodo("");
   };
 
@@ -27,14 +32,27 @@ function App() {
     ]);
   };
 
-  const todoItem = (todoText: string, index: number) => (
-    <li>
+  const toggleTodo = (todo: todo, index: number) => {
+    setTodos([
+      ...todos.slice(0, index),
+      { ...todo, completed: !todo.completed },
+      ...todos.slice(index + 1, todos.length),
+    ]);
+  };
+
+  const todoItem = (todo: todo, index: number) => (
+    <li className={todo.completed ? "completed" : ""}>
       <div className="view">
-        <input className="toggle" type="checkbox" />
-        <label className="label">{todoText}</label>
+        <input
+          className="toggle"
+          type="checkbox"
+          checked={todo.completed}
+          onChange={() => toggleTodo(todo, index)}
+        />
+        <label className="label">{todo.text}</label>
         <button className="destroy" onClick={() => deleteTodo(index)}></button>
       </div>
-      <input className="edit" value={todoText} />
+      <input className="edit" value={todo.text} />
     </li>
   );
 
