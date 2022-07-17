@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getTodos, createTodo } from "./apis/todos";
 import TodoItem from "./TodoItem";
 
 function App() {
-  const [newItemText, setNewItemText] = useState("");
-  const [items, setItems] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   const initItems = async () => {
-    const response = await fetch("https://api.jingi.io/todos", {
-      method: "GET",
+    const items = await getTodos();
+    setTodos(items);
+  };
+
+  const addItem = async () => {
+    const id = await createTodo(newTodoText);
+    setTodos((prevList) => {
+      setNewTodoText("");
+      return [...prevList, { id, text: newTodoText }];
     });
-    const items = await response.json();
-    setItems(items);
   };
 
   useEffect(() => {
@@ -21,27 +27,22 @@ function App() {
   return (
     <MainContainer>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          setItems((prevList) => {
-            setNewItemText("");
-            return [...prevList, { id: Math.random(), text: newItemText }];
-          });
+          await addItem();
         }}
       >
         <input
           type="text"
           name="item"
-          onChange={(e) => {
-            setNewItemText(e.target.value);
-          }}
-          value={newItemText}
+          onChange={(e) => setNewTodoText(e.target.value)}
+          value={newTodoText}
         />
         <button type="submit">+</button>
       </form>
       <ul id="todo-list">
-        {items.map((item, index) => (
-          <TodoItem key={index} todoItem={item} />
+        {todos.map((item) => (
+          <TodoItem key={item.id} todo={item} />
         ))}
       </ul>
     </MainContainer>

@@ -2,13 +2,13 @@ import React from "react";
 import styled from "styled-components";
 
 interface TodoItemProps {
-  todoItem: Todo;
+  todo: Todo;
 }
 
-function TodoItem({ todoItem }: TodoItemProps) {
+function TodoItem({ todo }: TodoItemProps) {
   return (
     <ItemContainer>
-      <div>{todoItem.text}</div>
+      <div>{todo.text}</div>
       <button>✏️</button>
       <button>🗑</button>
     </ItemContainer>
