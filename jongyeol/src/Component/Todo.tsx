@@ -1,6 +1,6 @@
 type TodoProps = {
     title: String,
-    content: String
+    content?: String
 }
 
 function Todo({title, content}: TodoProps) {
