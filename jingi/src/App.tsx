@@ -1,36 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getTodos, createTodo } from "./apis/todos";
+import TodoItem from "./TodoItem";
 
 function App() {
-  const [newItemText, setNewItemText] = useState("");
-  const [itemList, setItemList] = useState<string[]>([]);
+  const [newTodoText, setNewTodoText] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const initItems = async () => {
+    const items = await getTodos();
+    setTodos(items);
+  };
+
+  const addItem = async () => {
+    const id = await createTodo(newTodoText);
+    setTodos((prevList) => {
+      setNewTodoText("");
+      return [...prevList, { id, text: newTodoText }];
+    });
+  };
+
+  useEffect(() => {
+    initItems();
+  }, []);
 
   return (
     <MainContainer>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          setItemList((prevList): string[] => {
-            prevList.push(newItemText);
-            setNewItemText("");
-            console.log(prevList);
-            return prevList;
-          });
+          await addItem();
         }}
       >
         <input
           type="text"
           name="item"
-          onChange={(e) => {
-            console.log(e.target.value);
-            setNewItemText(e.target.value);
-          }}
-          value={newItemText}
+          onChange={(e) => setNewTodoText(e.target.value)}
+          value={newTodoText}
         />
+        <button type="submit">+</button>
       </form>
       <ul id="todo-list">
-        {itemList.map((item, index) => (
-          <li key={index}>{item}</li>
+        {todos.map((item) => (
+          <TodoItem key={item.id} todo={item} />
         ))}
       </ul>
     </MainContainer>
@@ -45,5 +57,5 @@ const MainContainer = styled.main`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding-top: 50px;
+  padding: 50px 0;
 `;
