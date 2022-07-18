@@ -1,6 +1,7 @@
 import React, { useState, Dispatch, SetStateAction } from 'react'
 
 type TodoType = {
+    id: number,
     title: string,
     content?: string
 }

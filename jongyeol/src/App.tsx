@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Todo from "./Component/Todo";
 import Form from "./Component/Form";
+import styled from 'styled-components'
 
 type TodoType = {
+    id: number,
     title: string,
     content?: string
 }
@@ -27,19 +29,30 @@ function App() {
         }
     }
 
+    const deleteTodo = (id: number) => {
+        setTodos(prevState => prevState.filter(todo => id !== todo.id))
+    }
+
     if (loading) {
         return <h2>loading...</h2>
     }
 
     return (
-        <>
+        <Container>
             <h1>TodoList</h1>
             <Form setTodos={setTodos}/>
              {todos?.map(todo => {
-                 return <Todo key={todo.title} title={todo.title} content={todo?.content}/>
+                 return <Todo key={todo.title} id={todo.id} title={todo.title} content={todo?.content} deleteTodo={deleteTodo}/>
              })}
-        </>
+        </Container>
     )
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
 
 export default App;
