@@ -42,7 +42,13 @@ function App() {
             <h1>TodoList</h1>
             <Form setTodos={setTodos}/>
              {todos?.map(todo => {
-                 return <Todo key={todo.title} id={todo.id} title={todo.title} content={todo?.content} deleteTodo={deleteTodo}/>
+                 return <Todo
+                     key={todo.title}
+                     id={todo.id}
+                     title={todo.title}
+                     content={todo?.content}
+                     deleteTodo={deleteTodo}
+                 />
              })}
         </Container>
     )
