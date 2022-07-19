@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import "./App.css";
 
 interface Todo {
@@ -6,58 +6,84 @@ interface Todo {
   text: string;
   completed: boolean;
 }
+type Todos = Array<Todo>;
+
+type Action = { type: string; todos: Todos };
+
+function reducer(state: Todos, action: Action): Todos {
+  switch (action.type) {
+    case "FETCH_TODOS":
+      return [...action.todos];
+    default:
+      throw new Error("Unhandled action");
+  }
+}
+
+const getTodos = async () => {
+  const { todos } = await fetch("/todos").then((res) => res.json());
+  const parsedData = JSON.parse(todos) as Todos;
+  return { type: "FETCH_TODOS", todos: parsedData || [] };
+};
+
+const addTodo = async (todo: Todo) => {
+  return await fetch("/todo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
+};
+
+const updateTodo = async (todo: Todo) => {
+  return await fetch("/todo", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
+};
+
+const deleteTodo = async (todo: Todo) => {
+  return await fetch("/todo", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
+};
 
 function App() {
   const [lastId, setLastId] = useState(0);
   const [newTodo, setNewTodo] = useState("");
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, dispatch] = useReducer(reducer, []);
 
   const fetchTodos = async () => {
-    const { todos } = await fetch("/todos").then((res) => res.json());
-    console.log("todos", todos);
-    const parsedData = JSON.parse(todos);
-    console.log("parsedData", parsedData);
-    if (parsedData) {
-      setTodos(parsedData);
-      setLastId(parsedData?.[parsedData?.length].id);
-    }
+    dispatch(await getTodos());
   };
 
-  const addTodo = async (todo: Todo) => {
-    return await fetch("/todo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    }).then((res) => res.json());
+  const onToggleTodo = async (todo: Todo) => {
+    await updateTodo({ ...todo, completed: !todo.completed });
+    fetchTodos();
   };
 
-  const updateTodo = async (todo: Todo) => {
-    return await fetch("/todo", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    }).then((res) => res.json());
-  };
-
-  const deleteTodo = async (todo: Todo) => {
-    return await fetch("/todo", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todo),
-    }).then((res) => res.json());
+  const onDeleteTodo = async (todo: Todo) => {
+    await deleteTodo(todo);
+    fetchTodos();
   };
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  useEffect(() => {
+    const lastId = todos?.[todos?.length - 1]?.id || 0;
+    setLastId(lastId + 1);
+  }, [todos]);
+
+  const onPressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     /*
     React projects that don't include the DOM library need these interfaces to compile.
     React Native applications use React, but there is no DOM available. The JavaScript runtime
@@ -69,26 +95,10 @@ function App() {
     // if (e.isComposing)
     if (e.key !== "Enter" || !newTodo) return;
     const addedTodo = { id: lastId, text: newTodo, completed: false };
-    // setTodos([...todos, addedTodo]);
     setNewTodo("");
-    setLastId(lastId + 1);
-    addTodo(addedTodo);
+    await addTodo(addedTodo);
+    fetchTodos();
   };
-
-  // const deleteTodo = (index: number) => {
-  //   setTodos([
-  //     ...todos.slice(0, index),
-  //     ...todos.slice(index + 1, todos.length),
-  //   ]);
-  // };
-
-  // const toggleTodo = (todo: Todo, index: number) => {
-  //   setTodos([
-  //     ...todos.slice(0, index),
-  //     { ...todo, completed: !todo.completed },
-  //     ...todos.slice(index + 1, todos.length),
-  //   ]);
-  // };
 
   const todoItem = (todo: Todo, index: number) => (
     <li className={todo.completed ? "completed" : ""}>
@@ -97,10 +107,10 @@ function App() {
           className="toggle"
           type="checkbox"
           checked={todo.completed}
-          onChange={() => updateTodo(todo)}
+          onChange={() => onToggleTodo(todo)}
         />
         <label className="label">{todo.text}</label>
-        <button className="destroy" onClick={() => deleteTodo(todo)}></button>
+        <button className="destroy" onClick={() => onDeleteTodo(todo)}></button>
       </div>
       <input className="edit" value={todo.text} />
     </li>
