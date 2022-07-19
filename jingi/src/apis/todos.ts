@@ -23,3 +23,7 @@ export const updateTodo = async (id: number, text: string) => {
     body: JSON.stringify({ text }),
   });
 };
+
+export const deleteTodo = async (id: number) => {
+  await fetch(`${REQUEST_URL}/${id}`, { method: "DELETE" });
+};

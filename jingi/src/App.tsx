@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getTodos, createTodo, updateTodo } from "./apis/todos";
+import { getTodos, createTodo, updateTodo, deleteTodo } from "./apis/todos";
 import TodoItem from "./TodoItem";
 
 function App() {
@@ -30,6 +30,13 @@ function App() {
     });
   };
 
+  const onDeleteTodo = async (id: number) => {
+    deleteTodo(id);
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
+    });
+  };
+
   useEffect(() => {
     initItems();
   }, []);
@@ -52,7 +59,12 @@ function App() {
       </form>
       <ul id="todo-list">
         {todos.map((item) => (
-          <TodoItem key={item.id} todo={item} onUpdate={onUpdateTodo} />
+          <TodoItem
+            key={item.id}
+            todo={item}
+            onUpdate={onUpdateTodo}
+            onDelete={onDeleteTodo}
+          />
         ))}
       </ul>
     </MainContainer>

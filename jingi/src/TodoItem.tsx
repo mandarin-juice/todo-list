@@ -4,9 +4,10 @@ import styled from "styled-components";
 interface TodoItemProps {
   todo: Todo;
   onUpdate?: (id: number, text: string) => {};
+  onDelete?: (id: number) => {};
 }
 
-function TodoItem({ todo, onUpdate }: TodoItemProps) {
+function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
   const [text, setText] = useState<string>(todo.text);
 
   const updateTodo = () => {
@@ -24,7 +25,7 @@ function TodoItem({ todo, onUpdate }: TodoItemProps) {
           if (e.code === "Enter") updateTodo();
         }}
       />
-      <button>🗑</button>
+      <button onClick={() => onDelete && onDelete(todo.id)}>🗑</button>
     </ItemContainer>
   );
 }

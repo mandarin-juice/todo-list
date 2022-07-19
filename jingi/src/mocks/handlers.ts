@@ -20,7 +20,13 @@ export const handlers = [
     else if (typeof id === "object") updateTodo(Number.parseInt(id[0]), text);
     return res(ctx.status(200));
   }),
-  rest.delete(REQUEST_URL, () => {}),
+  rest.delete(`${REQUEST_URL}/:id`, (req, res, ctx) => {
+    const { id } = req.params;
+    if (typeof id === "string") deleteTodo(Number.parseInt(id));
+    // TODO: string[]를 가려낼 수 있는 타입가드로 수정
+    else if (typeof id === "object") deleteTodo(Number.parseInt(id[0]));
+    return res(ctx.status(200));
+  }),
 ];
 
 const TODOS_ITEM_KEY = "todos";
@@ -45,4 +51,12 @@ const updateTodo = (id: number, text: string) => {
     target.text = text;
   }
   storage.setItem(TODOS_ITEM_KEY, JSON.stringify(todos));
+};
+
+const deleteTodo = (id: number) => {
+  const todos: Todo[] = getTodos();
+  storage.setItem(
+    TODOS_ITEM_KEY,
+    JSON.stringify(todos.filter((todo) => todo.id !== id))
+  );
 };
