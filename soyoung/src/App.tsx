@@ -84,15 +84,6 @@ function App() {
   }, [todos]);
 
   const onPressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    /*
-    React projects that don't include the DOM library need these interfaces to compile.
-    React Native applications use React, but there is no DOM available. The JavaScript runtime
-    is ES6/ES2015 only. These definitions allow such projects to compile with only `--lib ES6`.
-
-    Warning: all of these interfaces are empty. If you want type definitions for various properties
-    (such as HTMLInputElement.prototype.value), you need to add `--lib DOM` (via command line or tsconfig.json).
-    */
-    // if (e.isComposing)
     if (e.key !== "Enter" || !newTodo) return;
     const addedTodo = { id: lastId, text: newTodo, completed: false };
     setNewTodo("");
@@ -136,30 +127,6 @@ function App() {
         <input className="toggle-all" type="checkbox" />
         <ul id="todo-list" className="todo-list">
           {todos?.map((todo, index) => todoItem(todo, index))}
-          {/* <li>
-            <div className="view">
-              <input className="toggle" type="checkbox" />
-              <label className="label">새로운 타이틀</label>
-              <button className="destroy"></button>
-            </div>
-            <input className="edit" value="새로운 타이틀" />
-          </li>
-          <li className="editing">
-            <div className="view">
-              <input className="toggle" type="checkbox" />
-              <label className="label">수정중 타이틀</label>
-              <button className="destroy"></button>
-            </div>
-            <input className="edit" value="수정중 타이틀" />
-          </li>
-          <li className="completed">
-            <div className="view">
-              <input className="toggle" type="checkbox" checked />
-              <label className="label">완료된 타이틀</label>
-              <button className="destroy"></button>
-            </div>
-            <input className="edit" value="완료된 타이틀" />
-          </li> */}
         </ul>
       </div>
       <div className="count-container">
