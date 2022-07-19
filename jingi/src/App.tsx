@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getTodos, createTodo } from "./apis/todos";
+import { getTodos, createTodo, updateTodo } from "./apis/todos";
 import TodoItem from "./TodoItem";
 
 function App() {
@@ -17,6 +17,16 @@ function App() {
     setTodos((prevList) => {
       setNewTodoText("");
       return [...prevList, { id, text: newTodoText }];
+    });
+  };
+
+  const onUpdateTodo = async (id: number, text: string) => {
+    updateTodo(id, text);
+    setTodos((prevTodos) => {
+      for (const todo of prevTodos) {
+        if (todo.id === id) todo.text = text;
+      }
+      return [...prevTodos];
     });
   };
 
@@ -42,7 +52,7 @@ function App() {
       </form>
       <ul id="todo-list">
         {todos.map((item) => (
-          <TodoItem key={item.id} todo={item} />
+          <TodoItem key={item.id} todo={item} onUpdate={onUpdateTodo} />
         ))}
       </ul>
     </MainContainer>

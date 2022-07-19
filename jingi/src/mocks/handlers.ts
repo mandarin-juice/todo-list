@@ -12,7 +12,14 @@ export const handlers = [
     return res(ctx.status(200), ctx.json({ id }));
   }),
 
-  rest.put(REQUEST_URL, () => {}),
+  rest.put(`${REQUEST_URL}/:id`, async (req, res, ctx) => {
+    const { id } = req.params;
+    const { text } = await req.json();
+    if (typeof id === "string") updateTodo(Number.parseInt(id), text);
+    // TODO: string[]를 가려낼 수 있는 타입가드로 수정
+    else if (typeof id === "object") updateTodo(Number.parseInt(id[0]), text);
+    return res(ctx.status(200));
+  }),
   rest.delete(REQUEST_URL, () => {}),
 ];
 
@@ -26,4 +33,13 @@ const addTodo = (text: string) => {
   const items: Todo[] = getTodos();
   items.push({ id: items.length, text });
   storage.setItem(TODOS_ITEM_KEY, JSON.stringify(items));
+};
+
+const updateTodo = (id: number, text: string) => {
+  const todos: Todo[] = getTodos();
+  const target = todos.find((todo) => todo.id === id);
+  if (target) {
+    target.text = text;
+  }
+  storage.setItem(TODOS_ITEM_KEY, JSON.stringify(todos));
 };

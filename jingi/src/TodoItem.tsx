@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 interface TodoItemProps {
   todo: Todo;
+  onUpdate?: (id: number, text: string) => {};
 }
 
-function TodoItem({ todo }: TodoItemProps) {
+function TodoItem({ todo, onUpdate }: TodoItemProps) {
+  const [text, setText] = useState<string>(todo.text);
+
+  const updateTodo = () => {
+    if (onUpdate && text !== todo.text) onUpdate(todo.id, text);
+  };
+
   return (
     <ItemContainer>
-      <div>{todo.text}</div>
-      <button>✏️</button>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={() => updateTodo()}
+        onKeyDown={(e) => {
+          if (e.code === "Enter") updateTodo();
+        }}
+      />
       <button>🗑</button>
     </ItemContainer>
   );

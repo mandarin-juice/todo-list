@@ -16,3 +16,10 @@ export const createTodo = async (text: string): Promise<number> => {
   const { id } = await response.json();
   return id;
 };
+
+export const updateTodo = async (id: number, text: string) => {
+  await fetch(`${REQUEST_URL}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ text }),
+  });
+};
