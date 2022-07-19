@@ -1,14 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
-interface todo {
+interface Todo {
   text: string;
   completed: boolean;
 }
 
 function App() {
   const [newTodo, setNewTodo] = useState("");
-  const [todos, setTodos] = useState<todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const getData = async () => {
+    const { todos } = await fetch("/todos").then((res) => res.json());
+    console.log("todos", todos);
+    const parsedData = JSON.parse(todos);
+    console.log("parsedData", parsedData);
+    parsedData && setTodos(parsedData);
+  };
+
+  const setData = async (todo: Todo) => {
+    const res = await fetch("/todo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    }).then((res) => res.json());
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     /*
@@ -21,8 +43,10 @@ function App() {
     */
     // if (e.isComposing)
     if (e.key !== "Enter" || !newTodo) return;
-    setTodos([...todos, { text: newTodo, completed: false }]);
+    const addedTodo = { text: newTodo, completed: false };
+    setTodos([...todos, addedTodo]);
     setNewTodo("");
+    setData(addedTodo);
   };
 
   const deleteTodo = (index: number) => {
@@ -32,7 +56,7 @@ function App() {
     ]);
   };
 
-  const toggleTodo = (todo: todo, index: number) => {
+  const toggleTodo = (todo: Todo, index: number) => {
     setTodos([
       ...todos.slice(0, index),
       { ...todo, completed: !todo.completed },
@@ -40,7 +64,7 @@ function App() {
     ]);
   };
 
-  const todoItem = (todo: todo, index: number) => (
+  const todoItem = (todo: Todo, index: number) => (
     <li className={todo.completed ? "completed" : ""}>
       <div className="view">
         <input
@@ -75,7 +99,7 @@ function App() {
       <div className="main">
         <input className="toggle-all" type="checkbox" />
         <ul id="todo-list" className="todo-list">
-          {todos.map((todo, index) => todoItem(todo, index))}
+          {todos?.map((todo, index) => todoItem(todo, index))}
           {/* <li>
             <div className="view">
               <input className="toggle" type="checkbox" />
