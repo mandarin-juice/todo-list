@@ -29,8 +29,18 @@ function App() {
         }
     }
 
-    const deleteTodo = (id: number) => {
-        setTodos(prevState => prevState.filter(todo => id !== todo.id))
+    const deleteTodo = async (id: number) => {
+        try {
+            const res = await fetch(`todo/${id}`, {
+                method: 'DELETE',
+            });
+            const deleteResult = await res.json();
+            if (deleteResult.message === 'ok') {
+                fetchTodos();
+            }
+        } catch (err) {
+            console.error('err:', err);
+        }
     }
 
     if (loading) {
