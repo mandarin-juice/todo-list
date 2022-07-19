@@ -2,24 +2,29 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 
 interface Todo {
+  id: number;
   text: string;
   completed: boolean;
 }
 
 function App() {
+  const [lastId, setLastId] = useState(0);
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  const getData = async () => {
+  const fetchTodos = async () => {
     const { todos } = await fetch("/todos").then((res) => res.json());
     console.log("todos", todos);
     const parsedData = JSON.parse(todos);
     console.log("parsedData", parsedData);
-    parsedData && setTodos(parsedData);
+    if (parsedData) {
+      setTodos(parsedData);
+      setLastId(parsedData?.[parsedData?.length].id);
+    }
   };
 
-  const setData = async (todo: Todo) => {
-    const res = await fetch("/todo", {
+  const addTodo = async (todo: Todo) => {
+    return await fetch("/todo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,8 +33,28 @@ function App() {
     }).then((res) => res.json());
   };
 
+  const updateTodo = async (todo: Todo) => {
+    return await fetch("/todo", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    }).then((res) => res.json());
+  };
+
+  const deleteTodo = async (todo: Todo) => {
+    return await fetch("/todo", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    }).then((res) => res.json());
+  };
+
   useEffect(() => {
-    getData();
+    fetchTodos();
   }, []);
 
   const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -43,26 +68,27 @@ function App() {
     */
     // if (e.isComposing)
     if (e.key !== "Enter" || !newTodo) return;
-    const addedTodo = { text: newTodo, completed: false };
-    setTodos([...todos, addedTodo]);
+    const addedTodo = { id: lastId, text: newTodo, completed: false };
+    // setTodos([...todos, addedTodo]);
     setNewTodo("");
-    setData(addedTodo);
+    setLastId(lastId + 1);
+    addTodo(addedTodo);
   };
 
-  const deleteTodo = (index: number) => {
-    setTodos([
-      ...todos.slice(0, index),
-      ...todos.slice(index + 1, todos.length),
-    ]);
-  };
+  // const deleteTodo = (index: number) => {
+  //   setTodos([
+  //     ...todos.slice(0, index),
+  //     ...todos.slice(index + 1, todos.length),
+  //   ]);
+  // };
 
-  const toggleTodo = (todo: Todo, index: number) => {
-    setTodos([
-      ...todos.slice(0, index),
-      { ...todo, completed: !todo.completed },
-      ...todos.slice(index + 1, todos.length),
-    ]);
-  };
+  // const toggleTodo = (todo: Todo, index: number) => {
+  //   setTodos([
+  //     ...todos.slice(0, index),
+  //     { ...todo, completed: !todo.completed },
+  //     ...todos.slice(index + 1, todos.length),
+  //   ]);
+  // };
 
   const todoItem = (todo: Todo, index: number) => (
     <li className={todo.completed ? "completed" : ""}>
@@ -71,10 +97,10 @@ function App() {
           className="toggle"
           type="checkbox"
           checked={todo.completed}
-          onChange={() => toggleTodo(todo, index)}
+          onChange={() => updateTodo(todo)}
         />
         <label className="label">{todo.text}</label>
-        <button className="destroy" onClick={() => deleteTodo(index)}></button>
+        <button className="destroy" onClick={() => deleteTodo(todo)}></button>
       </div>
       <input className="edit" value={todo.text} />
     </li>
