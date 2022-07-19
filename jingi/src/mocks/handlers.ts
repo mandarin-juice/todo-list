@@ -29,10 +29,13 @@ const storage = window.localStorage;
 const getTodos = (): Todo[] =>
   JSON.parse(storage.getItem(TODOS_ITEM_KEY) || "[]");
 
-const addTodo = (text: string) => {
+const addTodo = (text: string): number => {
   const items: Todo[] = getTodos();
-  items.push({ id: items.length, text });
+  const ids = items.map(({ id }) => id);
+  const id = ids.length > 0 ? Math.max(...ids) + 1 : 0;
+  items.push({ id, text });
   storage.setItem(TODOS_ITEM_KEY, JSON.stringify(items));
+  return id;
 };
 
 const updateTodo = (id: number, text: string) => {
