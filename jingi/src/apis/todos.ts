@@ -8,19 +8,23 @@ export const getTodos = async (): Promise<Todo[]> => {
   return todos;
 };
 
-export const createTodo = async (text: string): Promise<number> => {
+export const createTodo = async (
+  text: string,
+  isDone: boolean
+): Promise<number> => {
   const response = await fetch(REQUEST_URL, {
     method: "POST",
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, isDone }),
   });
   const { id } = await response.json();
   return id;
 };
 
-export const updateTodo = async (id: number, text: string) => {
+export const updateTodo = async (todo: Todo) => {
+  const { id, ...others } = todo;
   await fetch(`${REQUEST_URL}/${id}`, {
     method: "PUT",
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ ...others }),
   });
 };
 

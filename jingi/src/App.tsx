@@ -13,20 +13,17 @@ function App() {
   };
 
   const addItem = async () => {
-    const id = await createTodo(newTodoText);
+    const id = await createTodo(newTodoText, false);
     setTodos((prevList) => {
       setNewTodoText("");
-      return [...prevList, { id, text: newTodoText }];
+      return [...prevList, { id, text: newTodoText, isDone: false }];
     });
   };
 
-  const onUpdateTodo = async (id: number, text: string) => {
-    updateTodo(id, text);
+  const onUpdateTodo = async (newTodo: Todo) => {
+    updateTodo(newTodo);
     setTodos((prevTodos) => {
-      for (const todo of prevTodos) {
-        if (todo.id === id) todo.text = text;
-      }
-      return [...prevTodos];
+      return prevTodos.map((todo) => (todo.id === newTodo.id ? newTodo : todo));
     });
   };
 
