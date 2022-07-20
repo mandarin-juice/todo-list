@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getTodos, createTodo } from "./apis/todos";
+import { getTodos, createTodo, updateTodo, deleteTodo } from "./apis/todos";
 import TodoItem from "./TodoItem";
 
 function App() {
@@ -13,10 +13,24 @@ function App() {
   };
 
   const addItem = async () => {
-    const id = await createTodo(newTodoText);
+    const id = await createTodo(newTodoText, false);
     setTodos((prevList) => {
       setNewTodoText("");
-      return [...prevList, { id, text: newTodoText }];
+      return [...prevList, { id, text: newTodoText, isDone: false }];
+    });
+  };
+
+  const onUpdateTodo = async (newTodo: Todo) => {
+    updateTodo(newTodo);
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => (todo.id === newTodo.id ? newTodo : todo));
+    });
+  };
+
+  const onDeleteTodo = async (id: number) => {
+    deleteTodo(id);
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
     });
   };
 
@@ -42,7 +56,12 @@ function App() {
       </form>
       <ul id="todo-list">
         {todos.map((item) => (
-          <TodoItem key={item.id} todo={item} />
+          <TodoItem
+            key={item.id}
+            todo={item}
+            onUpdate={onUpdateTodo}
+            onDelete={onDeleteTodo}
+          />
         ))}
       </ul>
     </MainContainer>
