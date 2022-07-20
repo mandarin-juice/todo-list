@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 interface Todo {
@@ -8,21 +8,9 @@ interface Todo {
 }
 type Todos = Array<Todo>;
 
-type Action = { type: string; todos: Todos };
-
-function reducer(state: Todos, action: Action): Todos {
-  switch (action.type) {
-    case "FETCH_TODOS":
-      return [...action.todos];
-    default:
-      throw new Error("Unhandled action");
-  }
-}
-
 const getTodos = async () => {
   const { todos } = await fetch("/todos").then((res) => res.json());
-  const parsedData = JSON.parse(todos) as Todos;
-  return { type: "FETCH_TODOS", todos: parsedData || [] };
+  return JSON.parse(todos) as Todos;
 };
 
 const addTodo = async (todo: Todo) => {
@@ -58,10 +46,11 @@ const deleteTodo = async (todo: Todo) => {
 function App() {
   const [lastId, setLastId] = useState(0);
   const [newTodo, setNewTodo] = useState("");
-  const [todos, dispatch] = useReducer(reducer, []);
+  const [todos, setTodos] = useState<Todos>([]);
 
   const fetchTodos = async () => {
-    dispatch(await getTodos());
+    const todos = await getTodos();
+    setTodos(todos);
   };
 
   const onToggleTodo = async (todo: Todo) => {
@@ -92,7 +81,10 @@ function App() {
   };
 
   const todoItem = (todo: Todo, index: number) => (
-    <li className={todo.completed ? "completed" : ""}>
+    <li
+      key={`todo-item-${index}`}
+      className={todo.completed ? "completed" : ""}
+    >
       <div className="view">
         <input
           className="toggle"
@@ -124,7 +116,6 @@ function App() {
         />
       </div>
       <div className="main">
-        <input className="toggle-all" type="checkbox" />
         <ul id="todo-list" className="todo-list">
           {todos?.map((todo, index) => todoItem(todo, index))}
         </ul>
