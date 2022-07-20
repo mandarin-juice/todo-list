@@ -1,21 +1,31 @@
-import { Todo, TodoApiInterface } from "./types";
+import { TodoApiInterface } from "./types";
+import axios from "axios";
 
 const API: TodoApiInterface = {
-  getTodos() {
-    return [
-      {
-        id: 1,
-        content: "test1",
+  getTodos: async () => {
+    const todos = await axios.get("/todo");
+    return todos;
+  },
+  createTodo: async ({ content }) => {
+    const result = await axios.post("/todo", {
+      content,
+    });
+    return result;
+  },
+  updateTodo: async ({ id, content }) => {
+    const result = await axios.put("/todo", {
+      id,
+      content,
+    });
+    return result;
+  },
+  deleteTodo: async ({ id }) => {
+    await axios.delete("/todo", {
+      params: {
+        id,
       },
-      {
-        id: 2,
-        content: "test2",
-      },
-      {
-        id: 3,
-        content: "test3",
-      },
-    ];
+    });
+    return;
   },
 };
 
