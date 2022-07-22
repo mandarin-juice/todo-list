@@ -9,6 +9,6 @@ declare type Todos = Array<Todo>;
 declare interface TodoApiInterface {
   getTodos: () => Promise<AxiosResponse<Todos>>;
   createTodo: (input: Pick<Todo, "content">) => Promise<AxiosResponse<{ id: number }>>;
-  updateTodo: (input: Todo) => Promise<AxiosResponse<{ id: number }>>;
-  deleteTodo: (input: Pick<Todo, "id">) => Promise<void>;
+  updateTodo: (input: Todo) => Promise<AxiosResponse<Todo | null>>;
+  deleteTodo: (input: Pick<Todo, "id">) => Promise<Todos>;
 }
