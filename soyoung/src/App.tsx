@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from "react";
 import "./App.css";
 import AddTodo from "./components/AddTodo";
 import TodoList from "./components/TodoList";
 import useFetch from "./hooks/useFetch";
 
 function App() {
-  const [lastId, setLastId] = useState(0);
   const [todos, fetchTodos] = useFetch();
-
-  useEffect(() => {
-    const lastId = todos?.[todos?.length - 1]?.id || 0;
-    setLastId(lastId + 1);
-  }, [todos]);
 
   return (
     <section className="todoapp">
       <div>
         <h1>TODOS</h1>
-        <AddTodo lastId={lastId} fetchTodos={fetchTodos} />
+        <AddTodo fetchTodos={fetchTodos} />
       </div>
       <div className="main">
         <TodoList todos={todos} fetchTodos={fetchTodos} />
