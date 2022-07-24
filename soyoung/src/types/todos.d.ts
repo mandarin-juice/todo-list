@@ -3,4 +3,7 @@ interface Todo {
   text: string;
   completed: boolean;
 }
+
 type Todos = Array<Todo>;
+
+type FetchTodos = () => void;

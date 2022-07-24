@@ -3,9 +3,10 @@ import { addTodo } from "../apis/todos";
 
 type AddTodoProps = {
   lastId: number;
+  fetchTodos: FetchTodos;
 };
 
-function AddTodo({ lastId }: AddTodoProps) {
+function AddTodo({ lastId, fetchTodos }: AddTodoProps) {
   const [newTodo, setNewTodo] = useState("");
 
   const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
@@ -15,7 +16,7 @@ function AddTodo({ lastId }: AddTodoProps) {
     e.preventDefault();
     const addedTodo = { id: lastId, text: newTodo, completed: false };
     await addTodo(addedTodo);
-    // fetchTodos();
+    fetchTodos();
     setNewTodo("");
   };
 

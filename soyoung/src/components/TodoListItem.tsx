@@ -2,23 +2,23 @@ import { updateTodo, deleteTodo } from "../apis/todos";
 
 interface TodoListItemProps {
   todo: Todo;
-  index: number;
+  fetchTodos: FetchTodos;
 }
 
-function TodoListItem({ todo, index }: TodoListItemProps) {
+function TodoListItem({ todo, fetchTodos }: TodoListItemProps) {
   const onToggleTodo = async (todo: Todo) => {
     await updateTodo({ ...todo, completed: !todo.completed });
-    // fetchTodos();
+    fetchTodos();
   };
 
   const onDeleteTodo = async (todo: Todo) => {
     await deleteTodo(todo);
-    // fetchTodos();
+    fetchTodos();
   };
 
   return (
     <li
-      key={`todo-item-${index}`}
+      key={`todo-item-${todo.id}`}
       className={todo.completed ? "completed" : ""}
     >
       <div className="view">
