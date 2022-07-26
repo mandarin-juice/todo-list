@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  todo-list-db:
+    image: mysql:8.0
+    ports:
+      - "23306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    volumes:
+      - ./data:/var/lib/mysql
+    restart: always
