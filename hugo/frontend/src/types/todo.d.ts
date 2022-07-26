@@ -12,3 +12,11 @@ declare interface TodoApiInterface {
   updateTodo: (input: Todo) => Promise<AxiosResponse<Todo | null>>;
   deleteTodo: (input: Pick<Todo, "id">) => Promise<Todos>;
 }
+
+interface TodoFormElements extends HTMLFormElement {
+  content: HTMLInputElement;
+}
+
+declare interface TodoSubmitInputs extends React.FormEvent<HTMLFormElement> {
+  target: TodoFormElements;
+}
