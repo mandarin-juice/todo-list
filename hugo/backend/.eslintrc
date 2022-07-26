@@ -1,0 +1,26 @@
+{
+	"root": true,
+	"plugins": [
+			"@typescript-eslint"
+	],
+	"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/recommended",
+			"plugin:prettier/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions":{
+		"project": "./tsconfig.json",
+    "ecmaVersion": 12,
+    "ecmaFeatures": {
+      "jsx": false
+    }
+	},
+  "env": {
+    "browser": false,
+    "node": true
+  },
+	"rules": {
+    "prettier/prettier": "error"
+	}
+}
