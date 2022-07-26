@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn nodemon --watch src/ src/index.ts"
+  },
+  "dependencies": {
+    "fastify": "^4.3.0",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
