@@ -5,7 +5,8 @@
       "@components/*" : ["./components/*"],
       "@apis/*": ["./apis/*"],
       "@util": ["./util"],
-      "@mocks/*": ["./mocks/*"]
+      "@mocks/*": ["./mocks/*"],
+      "@styles/*": ["./styles/*"]
     }
   }
 }
