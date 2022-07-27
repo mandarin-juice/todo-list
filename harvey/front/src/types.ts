@@ -1,3 +1,9 @@
+export enum UITodoFilterState {
+  all = "all",
+  progress = "progress",
+  done = "done",
+}
+
 export enum TodoState {
   created = "created",
   progress = "progress",

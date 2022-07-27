@@ -1,20 +1,13 @@
 import { rest } from "msw";
 import { TodoState, Todo } from "../types";
-
-const handleUndefiendNull = (target: any) => {
-  if (target === undefined || target === null) {
-    return false;
-  }
-  return target;
-};
+// import { Todo } from "../types";
 
 export const handlers = [
   rest.get("/todos", (req, res, ctx) => {
     const savedTodos: string | null = localStorage.getItem("harvey-todos");
     let result: Array<Todo>;
 
-    const filterState: string = req.params.state?.toString();
-    console.log("filterState", filterState);
+    const filterState: string | null = req.url.searchParams.get("state");
 
     if (savedTodos === null) {
       result = [];
@@ -76,6 +69,9 @@ export const handlers = [
         })
       );
     }
+
+    console.log("savedTodos", savedTodos);
+
     const todos: Array<Todo> = JSON.parse(savedTodos);
     const targetId: string = req.params.todoId.toString();
     const changingTodo: Todo = await req.json();
