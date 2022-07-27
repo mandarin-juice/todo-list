@@ -11,6 +11,7 @@ TODO List 만들며 타입스크립트 공부하기!
   - [x] TODO Update
   - [x] TODO Delete
 - Back-end
+  - [x] TypeORM 셋팅
   - [ ] TODO Create
   - [ ] TODO Retrieve
   - [ ] TODO Update

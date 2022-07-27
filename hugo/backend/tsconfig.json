@@ -1,0 +1,15 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noUnusedLocals": true,
+    "importsNotUsedAsValues": "error",                                                    
+    "outDir": "build",
+    "baseUrl": "./src",
+    "paths" : {}
+  },
+  "include": [
+    "src"
+  ]
+}
