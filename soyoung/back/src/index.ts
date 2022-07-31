@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import "reflect-metadata";
+import "./data-source";
 
 const server = fastify();
 
