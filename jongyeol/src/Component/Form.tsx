@@ -1,7 +1,7 @@
 import React, { useState, Dispatch, SetStateAction } from 'react'
 
 type TodoType = {
-    id: number,
+    id?: number,
     title: string,
     content?: string
 }
@@ -25,11 +25,12 @@ function Form({ setTodos }: FormProps) {
            alert('제목을 입력하세요');
            return;
         }
-        // @ts-ignore
+
+
+        addTodo();
         setTodos(prevState => {
             return [...prevState, {title, content}]
-        })
-        addTodo()
+        });
         resetInputs();
     }
 

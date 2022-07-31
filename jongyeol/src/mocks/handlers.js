@@ -25,10 +25,18 @@ export const handlers = [
     }),
 
   rest.post("/todo", async (req, res, ctx)  => {
-      const todos = getLocalStorage(TODOS);
-      const newTodo = await req.json();
-      todos.push(newTodo);
-      localStorage.setItem(TODOS, JSON.stringify(todos));
+      let todos = await getLocalStorage(TODOS);
+      let lastId;
+        if (todos.length) {
+            lastId = todos[todos.length -1].id;
+        } else {
+            lastId = 0;
+            todos = [];
+        }
+          const newTodo = await req.json();
+          newTodo.id = lastId + 1;
+          todos.push(newTodo);
+      setLocalStorage(TODOS, todos);
       return res(
         ctx.status(200)
     );

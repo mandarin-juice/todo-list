@@ -4,7 +4,7 @@ import Form from "./Component/Form";
 import styled from 'styled-components'
 
 type TodoType = {
-    id: number,
+    id?: number,
     title: string,
     content?: string
 }
@@ -29,7 +29,7 @@ function App() {
         }
     }
 
-    const deleteTodo = async (id: number) => {
+    const deleteTodo = async (id: number | undefined) => {
         try {
             const res = await fetch(`todo/${id}`, {
                 method: 'DELETE',
