@@ -1,35 +1,35 @@
-import fastify from 'fastify'
+import fastify from 'fastify';
 
 interface IQuerystring {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 interface IHeaders {
-    'h-Custom': string;
+  'h-Custom': string;
 }
 
-const server = fastify()
+const server = fastify();
 
 server.get('/ping', async (request, reply) => {
-    return 'pong\n'
-})
+  return 'pong\n';
+});
 
 server.get<{
-    Querystring: IQuerystring,
-    Headers: IHeaders
+  Querystring: IQuerystring;
+  Headers: IHeaders;
 }>('/auth', async (request, reply) => {
-    const { username, password } = request.query
-    const customerHeader = request.headers['h-Custom']
-    // do something with request data
+  const { username, password } = request.query;
+  const customerHeader = request.headers['h-Custom'];
+  // do something with request data
 
-    return `logged in!`
-})
+  return 'logged in!';
+});
 
 server.listen({ port: 8080 }, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server listening at ${address}`)
-})
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log(`Server listening at ${address}`);
+});
