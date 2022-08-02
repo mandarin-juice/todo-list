@@ -2,7 +2,7 @@
   "plugins": [
     [ "module-resolver", {
       "alias": {
-        "@routes" : "./build/routes/",
+        "@routes" : "./build/routes/index",
         "@schema" : "./build/schema/"
       }
       }

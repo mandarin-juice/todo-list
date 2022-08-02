@@ -8,7 +8,7 @@
     "outDir": "build",
     "baseUrl": "./src",
     "paths" : {
-      "@routes/*" : ["./routes/*"],
+      "@routes" : ["./routes/index"],
       "@schema/*" : ["./schema/*"],
     }
   },

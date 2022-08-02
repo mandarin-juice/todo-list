@@ -1,22 +1,11 @@
 import fastify from "fastify";
+import routes from "@routes";
 import mongoose from "mongoose";
 import { TodoSchema } from "@schema/todo";
 
 const server = fastify();
 
-server.get("/ping", async (request, reply) => {
-  return "pong\n";
-});
-
-server.get("/todos", async (request, reply) => {
-  const todos = mongoose.model("todos", TodoSchema).find();
-  console.log(todos);
-  return todos;
-});
-
-server.post("/todos", async (request, reply) => {
-  return "pong\n";
-});
+server.register(routes);
 
 server.listen({ port: 9082 }, async (err, address) => {
   if (err) {
@@ -31,9 +20,14 @@ server.listen({ port: 9082 }, async (err, address) => {
   }
 
   try {
-    await mongoose.connect(dbURL, {
+    const connection = await mongoose.connect(dbURL, {
       dbName: "hugo",
     });
+
+    server.decorate("db", {
+      Todos: connection.model("todos", TodoSchema),
+    });
+
     console.log(`Server listening at ${address}`);
   } catch (error: unknown) {
     console.error(error);
