@@ -13,6 +13,6 @@ export const TodoSchema = new Schema<Todo>({
   },
   isDone: {
     type: Boolean,
-    required: true,
+    default: false,
   },
 });
