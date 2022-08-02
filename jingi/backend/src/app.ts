@@ -1,4 +1,6 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
+
 import { todoRepository } from "./data-source";
 import { Todo } from "./entity/Todo";
 
@@ -6,9 +8,12 @@ const fastify = Fastify({
   logger: true,
 });
 
+fastify.register(cors, {});
+
 fastify.get("/ping", async (request, reply) => "pong");
 fastify.get("/todos", async (request, reply) => {
   const allTodos = await todoRepository.find();
+  console.log(allTodos);
   return allTodos;
 });
 
@@ -16,12 +21,13 @@ fastify.post<{
   Body: { text: string; isDone: boolean };
 }>("/todos", async (request, reply) => {
   const { text, isDone } = request.body;
+  console.log(request.body, text, isDone);
   const todo = new Todo();
   todo.text = text;
   todo.isDone = isDone;
-  todoRepository.save(todo);
+  await todoRepository.save(todo);
 
-  return { id: todo.id };
+  reply.send({ id: todo.id });
 });
 
 fastify.put<{
@@ -35,7 +41,7 @@ fastify.put<{
   if (todo) {
     todo.text = text;
     todo.isDone = isDone;
-    todoRepository.save(todo);
+    await todoRepository.save(todo);
   } else {
     reply.code(404);
   }
@@ -48,7 +54,7 @@ fastify.delete<{
   const todo = await todoRepository.findOneBy({ id });
 
   if (todo) {
-    todoRepository.remove(todo);
+    await todoRepository.remove(todo);
   } else {
     reply.code(404);
   }

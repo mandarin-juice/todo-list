@@ -11,6 +11,7 @@
     "db:log": "cd db && docker-compose logs -f"
   },
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
     "fastify": "^4.3.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
