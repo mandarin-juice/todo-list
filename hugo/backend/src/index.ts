@@ -11,9 +11,18 @@ server.addContentTypeParser("application/json", { parseAs: "string" }, function 
   try {
     let json = JSON.parse(body as string);
     done(null, json);
-  } catch (error: unknown) {
+  } catch (error: any) {
+    error.statusCode = 400;
     done(error as Error, undefined);
   }
+});
+
+mongoose.set("toJSON", {
+  virtuals: true,
+  transform: (_, converted) => {
+    delete converted._id;
+    delete converted.__v;
+  },
 });
 
 const connectionDB = async () => {

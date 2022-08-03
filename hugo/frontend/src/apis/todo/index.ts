@@ -6,26 +6,33 @@ const API: TodoApiInterface = {
     return todos;
   },
   createTodo: async ({ content }) => {
-    const { data: result } = await axios.post("/todo", {
-      content,
-    });
-    return result;
+    try {
+      const { data: result } = await axios.post("/todo", {
+        content,
+      });
+
+      return result;
+    } catch (error: unknown) {
+      console.error(error);
+    }
   },
   updateTodo: async ({ id, content, isDone }) => {
     try {
-      const { data: result } = await axios.put("/todo", {
+      await axios.put("/todo", {
         id,
         content,
         isDone,
       });
-      return result;
     } catch (error: unknown) {
-      return null;
+      console.error(error);
     }
   },
   deleteTodo: async ({ id }) => {
-    const { data: result } = await axios.delete(`/todo/${id}`);
-    return result;
+    try {
+      await axios.delete(`/todo/${id}`);
+    } catch (error: unknown) {
+      console.error(error);
+    }
   },
 };
 

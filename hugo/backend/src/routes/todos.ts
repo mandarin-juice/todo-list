@@ -12,19 +12,57 @@ const todos = (fastify: any, _: any, done: any) => {
 
   fastify.post("/", (request: any, reply: any) => {
     const { content } = request.body;
-    const todosModel = fastify.db.Todos;
-    const result = todosModel.create(
+    fastify.db.Todos.create(
       {
         content,
       },
-      (error: unknown) => {
-        console.error(error);
-        reply.code(400).send(null);
-        return;
+      (error: unknown, result: any) => {
+        if (error) {
+          reply.code(400).send({ error });
+          return;
+        }
+        reply.code(200).send({
+          id: result.id,
+        });
       },
     );
+  });
 
-    reply.code(200).send(result);
+  fastify.delete("/", (request: any, reply: any) => {
+    const { id } = request.body;
+    fastify.db.Todos.deleteOne(
+      {
+        id,
+      },
+      (error: any) => {
+        if (error) {
+          reply.code(404).send({ error });
+          return;
+        }
+        reply.code(200).send();
+      },
+    );
+  });
+
+  fastify.put("/", (request: any, reply: any) => {
+    const { id, content, isDone } = request.body;
+    fastify.db.Todos.updateOne(
+      {
+        id,
+      },
+      {
+        content,
+        isDone,
+      },
+      (error: unknown, result: any) => {
+        if (error) {
+          console.error(error);
+          reply.code(400).send({ error });
+          return;
+        }
+        reply.code(200).send();
+      },
+    );
   });
 
   done();

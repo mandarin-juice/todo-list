@@ -87,18 +87,13 @@ export const handlers = [
     });
     setStorageData(todos);
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        ...updatedTodo,
-      }),
-    );
+    return res(ctx.status(200));
   }),
 
   rest.delete("/todo/:id", (req, res, ctx) => {
     const { id } = req.params;
     todos = todos.filter((todo) => todo.id !== Number(id));
 
-    return res(ctx.status(200), ctx.json(todos));
+    return res(ctx.status(200));
   }),
 ];
