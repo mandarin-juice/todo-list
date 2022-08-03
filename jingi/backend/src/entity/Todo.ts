@@ -5,9 +5,9 @@ export class Todo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 200 })
+  @Column({ length: 200, nullable: true })
   text: string;
 
-  @Column()
+  @Column({ default: false })
   isDone: boolean;
 }

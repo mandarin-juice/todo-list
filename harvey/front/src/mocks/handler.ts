@@ -1,20 +1,14 @@
 import { rest } from "msw";
 import { TodoState, Todo } from "../types";
-
-const handleUndefiendNull = (target: any) => {
-  if (target === undefined || target === null) {
-    return false;
-  }
-  return target;
-};
+import { TODO_KEY } from "../utils/constants";
+// import { Todo } from "../types";
 
 export const handlers = [
   rest.get("/todos", (req, res, ctx) => {
-    const savedTodos: string | null = localStorage.getItem("harvey-todos");
+    const savedTodos: string | null = localStorage.getItem(TODO_KEY);
     let result: Array<Todo>;
 
-    const filterState: string = req.params.state?.toString();
-    console.log("filterState", filterState);
+    const filterState: string | null = req.url.searchParams.get("state");
 
     if (savedTodos === null) {
       result = [];
@@ -36,7 +30,7 @@ export const handlers = [
   rest.post("/todo", async (req, res, ctx) => {
     // Persist user's authentication in the session
 
-    const savedTodos: string | null = localStorage.getItem("harvey-todos");
+    const savedTodos: string | null = localStorage.getItem(TODO_KEY);
 
     let result = [];
     if (savedTodos === null) {
@@ -47,10 +41,10 @@ export const handlers = [
       todos.push(new Todo(todo, TodoState.created));
 
       result = todos;
-      //   localStorage.setItem("harvey-todos", JSON.stringify(todos));
+      //   localStorage.setItem(TODO_KEY, JSON.stringify(todos));
       //   todos.push(req)
     }
-    localStorage.setItem("harvey-todos", JSON.stringify(result));
+    localStorage.setItem(TODO_KEY, JSON.stringify(result));
 
     return res(
       // Respond with a 200 status code
@@ -63,7 +57,7 @@ export const handlers = [
   rest.put("/todo/:todoId", async (req, res, ctx) => {
     // Persist user's authentication in the session
 
-    const savedTodos: string | null = localStorage.getItem("harvey-todos");
+    const savedTodos: string | null = localStorage.getItem(TODO_KEY);
 
     let result = [];
 
@@ -76,6 +70,9 @@ export const handlers = [
         })
       );
     }
+
+    console.log("savedTodos", savedTodos);
+
     const todos: Array<Todo> = JSON.parse(savedTodos);
     const targetId: string = req.params.todoId.toString();
     const changingTodo: Todo = await req.json();
@@ -110,7 +107,7 @@ export const handlers = [
 
     todos[targetIndex] = target;
 
-    localStorage.setItem("harvey-todos", JSON.stringify(todos));
+    localStorage.setItem(TODO_KEY, JSON.stringify(todos));
     //   todos.push(req)
 
     return res(
@@ -121,11 +118,10 @@ export const handlers = [
       })
     );
   }),
-
   rest.delete("/todo/:todoId", async (req, res, ctx) => {
     // Persist user's authentication in the session
 
-    const savedTodos: string | null = localStorage.getItem("harvey-todos");
+    const savedTodos: string | null = localStorage.getItem(TODO_KEY);
 
     let result = [];
 
@@ -159,7 +155,7 @@ export const handlers = [
     }
     todos.splice(targetIndex, 1);
 
-    localStorage.setItem("harvey-todos", JSON.stringify(todos));
+    localStorage.setItem(TODO_KEY, JSON.stringify(todos));
 
     return res(
       // Respond with a 200 status code

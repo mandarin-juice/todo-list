@@ -1,4 +1,7 @@
-export const REQUEST_URL = "https://api.jingi.io/todos";
+const API_URL = process.env.REACT_APP_API_URL;
+export const REQUEST_URL = API_URL
+  ? `${API_URL}/todos`
+  : "https://api.jingi.io/todos";
 
 export const getTodos = async (): Promise<Todo[]> => {
   const response = await fetch(REQUEST_URL, {
@@ -14,6 +17,7 @@ export const createTodo = async (
 ): Promise<number> => {
   const response = await fetch(REQUEST_URL, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, isDone }),
   });
   const { id } = await response.json();
