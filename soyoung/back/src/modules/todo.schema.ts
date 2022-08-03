@@ -1,6 +1,6 @@
 const bodyJsonSchema = {
   type: "object",
-  required: ["requiredKey"],
+  required: ["text"],
   properties: {
     text: { type: "string" },
     completed: { type: "boolean" },
