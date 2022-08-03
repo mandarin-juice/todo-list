@@ -1,10 +1,19 @@
-# POST http://127.0.0.1:8080/foo HTTP/1.1
+# DELETE http://127.0.0.1:8080/todo/c2e5f589-0889-4e29-c7d6-551f4e806f86 HTTP/1.1
+
+# PUT http://127.0.0.1:8080/todo/c2e5f589-0889-4e29-c7d6-551f4e806f86 HTTP/1.1
 # content-type: application/json
 
 # {
-#     "key": "sample",
-#     "value": "Wed, 21 Oct 2015 18:27:50 GMT"
+#     "state": "progress",
+#     "content" : "content"
 # }
 
-GET http://127.0.0.1:8080/foo?key=sample HTTP/1.1
+# POST http://127.0.0.1:8080/todo HTTP/1.1
+# content-type: text/plain
+
+# hihi
+
+# GET http://127.0.0.1:8080/todos?state=created HTTP/1.1
+GET http://127.0.0.1:8080/todos HTTP/1.1
+
 
