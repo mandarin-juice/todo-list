@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Todo } from "./entities/Todo";
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "mysql",
   host: "localhost",
   port: 3307,
