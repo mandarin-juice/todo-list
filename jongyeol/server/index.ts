@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import cors from '@fastify/cors';
 
 interface IQuerystring {
   username: string;
@@ -11,8 +12,11 @@ interface IHeaders {
 
 const server = fastify();
 
+server.register(cors, {
+  origin: true,
+});
 server.get('/ping', async (request, reply) => {
-  return 'pong\n';
+  reply.send({ hello: 'world' });
 });
 
 server.get<{

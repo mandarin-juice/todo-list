@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Todo from './Component/Todo';
 import Form from './Component/Form';
 import styled from 'styled-components';
-import { deleteTodo, fetchTodos } from './api';
+import { deleteTodo, fetchTodos, ping } from './api';
 
 type TodoType = {
   id?: number;
@@ -15,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    ping();
     handleFetchTodos();
   }, []);
 
