@@ -1,6 +1,5 @@
 import fastify from "fastify";
 import "./data-source";
-import "./data-controller";
 import todoRoutes from "./modules/todo.route";
 
 const server = fastify();
