@@ -24,11 +24,7 @@ export const updateTodo = async (todo: Todo) => {
 };
 
 export const deleteTodo = async (todo: Todo) => {
-  return await fetch(`/api/todos`, {
+  return await fetch(`/api/todos/${todo.id}`, {
     method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(todo),
   });
 };
