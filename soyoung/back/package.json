@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "yarn build && node index.js",
-    "dev": "nodemon --watch ts-node --files src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'npx' ts-node --files src/index.ts",
     "db:start": "cd db && docker-compose up -d",
     "db:stop": "cd db && docker-compose down"
   },

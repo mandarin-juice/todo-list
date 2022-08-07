@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev:front": "yarn workspace front start",
-    "dev:back": "yarn workspace back start"
+    "dev:back": "yarn workspace back dev"
   },
   "msw": {
     "workerDirectory": "front/public"
