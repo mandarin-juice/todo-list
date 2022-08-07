@@ -4,6 +4,7 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "noUnusedLocals": true,
+    "declaration": true,
     "importsNotUsedAsValues": "error",                                              
     "outDir": "build",
     "baseUrl": "./src",

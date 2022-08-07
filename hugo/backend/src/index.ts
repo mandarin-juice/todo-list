@@ -1,9 +1,15 @@
-import fastify from "fastify";
+import fastify, { FastifyInstance, FastifyPluginCallback, FastifyPluginAsync } from "fastify";
+import fp from "fastify-plugin";
 import routes from "@routes";
 import mongoose from "mongoose";
 import { TodoSchema } from "@schema/todo";
 
-const server = fastify({
+declare module "fastify" {
+  interface FastifyRequest {}
+  interface FastifyReply {}
+}
+
+const server: FastifyInstance = fastify({
   logger: false,
 });
 

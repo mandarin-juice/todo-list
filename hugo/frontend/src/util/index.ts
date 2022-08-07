@@ -25,7 +25,7 @@ export const storageAvailable = (): boolean => {
   }
 };
 
-export const makeId = (): number => {
+export const makeId = (): string => {
   const date = new Date();
-  return date.getTime();
+  return date.getTime().toString();
 };

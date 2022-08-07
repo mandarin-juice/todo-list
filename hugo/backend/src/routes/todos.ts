@@ -1,5 +1,7 @@
-const todos = (fastify: any, _: any, done: any) => {
-  fastify.get("/", (request: any, reply: any) => {
+import type { FastifyPluginCallback } from "fastify";
+
+const todos: FastifyPluginCallback = (fastify, _, done) => {
+  fastify.get("/", (_, reply) => {
     fastify.db.Todos.find({}, (error: any, result: any) => {
       if (error) {
         reply.code(400).send(null);
@@ -54,7 +56,7 @@ const todos = (fastify: any, _: any, done: any) => {
         content,
         isDone,
       },
-      (error: unknown, result: any) => {
+      (error: unknown) => {
         if (error) {
           console.error(error);
           reply.code(400).send({ error });

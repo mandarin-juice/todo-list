@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
 interface Todo {
-  _id: string;
+  id: string;
   content: string;
   isDone: boolean;
 }
