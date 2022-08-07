@@ -1,5 +1,11 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
+import knex from './src/db';
+
+type Todo = {
+  title: string;
+  content: string;
+};
 
 interface IQuerystring {
   username: string;
@@ -10,13 +16,33 @@ interface IHeaders {
   'h-Custom': string;
 }
 
-const server = fastify();
+const server = fastify({
+  logger: true,
+});
 
 server.register(cors, {
   origin: true,
 });
-server.get('/ping', async (request, reply) => {
-  reply.send({ hello: 'world' });
+
+server.get('/todos', async (request, reply) => {
+  try {
+    const result = await knex.select('*').from('todolist');
+    reply.send(result);
+  } catch (err) {
+    reply.send({ message: `There was an error retrieving todolist: ${err}` });
+  }
+});
+
+server.post<{ Body: Todo }>('/todo', async (request, reply) => {
+  try {
+    await knex('todolist').insert({
+      title: request.body.title,
+      content: request.body.content,
+    });
+    reply.send({ message: `todolist ${request.body.title}` });
+  } catch (err) {
+    reply.send({ message: `There was an error creating ${request.body.title} todolist: ${err}` });
+  }
 });
 
 server.get<{

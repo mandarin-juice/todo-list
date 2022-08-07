@@ -29,10 +29,6 @@ function Form({ setTodos }: FormProps) {
 
     await addTodo(title, content);
     const result = await fetchTodos();
-    setTodos((prevState) => {
-      return [...prevState, { title, content }];
-    });
-
     resetInputs();
   };
 

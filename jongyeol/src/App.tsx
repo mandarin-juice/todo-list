@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Todo from './component/Todo';
 import Form from './component/Form';
 import styled from 'styled-components';
-import { deleteTodo, fetchTodos, ping } from './api';
+import { deleteTodo, fetchTodos } from './api';
 
 type TodoType = {
   id?: number;
@@ -15,7 +15,6 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    ping();
     handleFetchTodos();
   }, []);
 
@@ -33,7 +32,6 @@ function App() {
   const handleDeleteTodo = async (id: number | undefined) => {
     try {
       const deleteResult = await deleteTodo(id);
-      console.log(deleteResult);
       if (deleteResult.message === 'ok') {
         handleFetchTodos();
       }
