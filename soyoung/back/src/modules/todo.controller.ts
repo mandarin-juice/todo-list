@@ -10,17 +10,23 @@ export async function registerTodoHandler(
   const body = request.body;
 
   try {
-    const user = await createTodo(body);
-
-    return reply.code(201).send(user);
+    const todoId = await createTodo(body);
+    return reply.code(201).send(todoId);
   } catch (e) {
     console.log(e);
     return reply.code(500).send(e);
   }
 }
 
-export async function getTodosHandler() {
-  const todos = await findTodos();
-
-  return todos;
+export async function getTodosHandler(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  try {
+    const todos = await findTodos();
+    return reply.code(201).send(todos);
+  } catch (e) {
+    console.log(e);
+    return reply.code(500).send(e);
+  }
 }

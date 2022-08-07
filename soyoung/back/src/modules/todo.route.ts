@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { registerTodoHandler, getTodosHandler } from "./todo.controller";
-import { schema } from "./todo.schema";
+import { createTodoSchema } from "./todo.schema";
 
 async function todoRoutes(server: FastifyInstance) {
-  server.post("/", { schema }, registerTodoHandler);
+  server.post("/", { schema: { body: createTodoSchema } }, registerTodoHandler);
 
   server.get("/", getTodosHandler);
 }
