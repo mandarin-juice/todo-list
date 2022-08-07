@@ -1,14 +1,10 @@
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 export const getTodos = async () => {
-  const { todos } = await fetch(`${BASE_URL}/api/todos`).then((res) =>
-    res.json()
-  );
-  return JSON.parse(todos) as Todos;
+  const todos = await fetch(`/api/todos`).then((res) => res.json());
+  return todos as Todos;
 };
 
 export const addTodo = async (todo: Todo) => {
-  return await fetch(`${BASE_URL}/api/todos`, {
+  return await fetch(`/api/todos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +14,7 @@ export const addTodo = async (todo: Todo) => {
 };
 
 export const updateTodo = async (todo: Todo) => {
-  return await fetch(`${BASE_URL}/api/todos`, {
+  return await fetch(`/api/todos`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +24,7 @@ export const updateTodo = async (todo: Todo) => {
 };
 
 export const deleteTodo = async (todo: Todo) => {
-  return await fetch(`${BASE_URL}/api/todos`, {
+  return await fetch(`/api/todos`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
