@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Todo from './Component/Todo';
-import Form from './Component/Form';
+import Todo from './component/Todo';
+import Form from './component/Form';
 import styled from 'styled-components';
 import { deleteTodo, fetchTodos, ping } from './api';
 
@@ -33,6 +33,7 @@ function App() {
   const handleDeleteTodo = async (id: number | undefined) => {
     try {
       const deleteResult = await deleteTodo(id);
+      console.log(deleteResult);
       if (deleteResult.message === 'ok') {
         handleFetchTodos();
       }

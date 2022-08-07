@@ -1,5 +1,5 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
-import { addTodo } from '../api';
+import { addTodo, fetchTodos } from '../api';
 
 type TodoType = {
   id?: number;
@@ -28,9 +28,11 @@ function Form({ setTodos }: FormProps) {
     }
 
     await addTodo(title, content);
+    const result = await fetchTodos();
     setTodos((prevState) => {
       return [...prevState, { title, content }];
     });
+
     resetInputs();
   };
 

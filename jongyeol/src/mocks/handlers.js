@@ -35,7 +35,7 @@ export const handlers = [
     newTodo.id = lastId + 1;
     todos.push(newTodo);
     setLocalStorage(TODOS, todos);
-    return res(ctx.status(200));
+    return res(ctx.status(200), ctx.json({ message: 'ok' }));
   }),
 
   rest.get('/todos', (req, res, ctx) => {

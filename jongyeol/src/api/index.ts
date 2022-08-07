@@ -29,7 +29,7 @@ export const addTodo = async (title: string, content: string) => {
       },
       body: JSON.stringify({ title, content }),
     });
-    return res.json();
+    return await res.json();
   } catch (e) {
     console.error(e);
   }
