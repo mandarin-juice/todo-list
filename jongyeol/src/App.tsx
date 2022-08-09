@@ -8,6 +8,7 @@ type TodoType = {
   id?: number;
   title: string;
   content?: string;
+  completed: number;
 };
 
 function App() {
@@ -30,13 +31,11 @@ function App() {
   };
 
   const handleDeleteTodo = async (id: number | undefined) => {
-    try {
-      const deleteResult = await deleteTodo(id);
-      if (deleteResult.message === 'ok') {
-        handleFetchTodos();
-      }
-    } catch (err) {
-      console.error('err:', err);
+    const deleteResultCode = await deleteTodo(id);
+    if (deleteResultCode === 200) {
+      handleFetchTodos();
+    } else {
+      alert('삭제 실패');
     }
   };
 
@@ -47,7 +46,7 @@ function App() {
   return (
     <Container>
       <h1>TodoList</h1>
-      <Form setTodos={setTodos} />
+      <Form setTodos={setTodos} handleFetchTodos={handleFetchTodos} />
       {todos?.map((todo) => {
         return (
           <Todo
@@ -55,6 +54,7 @@ function App() {
             id={todo.id}
             title={todo.title}
             content={todo?.content}
+            completed={todo?.completed}
             deleteTodo={handleDeleteTodo}
           />
         );

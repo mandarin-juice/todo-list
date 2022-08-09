@@ -2,9 +2,18 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import knex from './src/db';
 
-type Todo = {
+type TodoBody = {
   title: string;
   content: string;
+};
+
+type PatchBody = {
+  id: number;
+  completed: boolean;
+};
+
+type DeleteParam = {
+  id: number;
 };
 
 interface IQuerystring {
@@ -33,15 +42,42 @@ server.get('/todos', async (request, reply) => {
   }
 });
 
-server.post<{ Body: Todo }>('/todo', async (request, reply) => {
+server.post<{ Body: TodoBody }>('/todo', async (request, reply) => {
+  const { title, content }: TodoBody = request.body;
   try {
     await knex('todolist').insert({
-      title: request.body.title,
-      content: request.body.content,
+      title,
+      content,
     });
-    reply.send({ message: `todolist ${request.body.title}` });
+    reply.code(200).send({ message: `todolist ${title}` });
   } catch (err) {
-    reply.send({ message: `There was an error creating ${request.body.title} todolist: ${err}` });
+    reply.send({ message: `There was an error creating ${title} todolist: ${err}` });
+  }
+});
+
+server.delete<{ Params: DeleteParam }>('/todo/:id', async (request, reply) => {
+  const id = request.params.id;
+  try {
+    await knex('todolist').where('id', id).del();
+    reply.code(200).send({ message: `todolist ${id} deleted` });
+  } catch (err) {
+    reply.send({ message: `There was an error deleting ${id} todolist: ${err}` });
+  }
+});
+
+server.patch<{ Body: PatchBody }>('/todo/complete', async (request, reply) => {
+  const { id, completed }: PatchBody = request.body;
+  console.log(id, completed);
+  try {
+    const result = await knex('todolist')
+      .where('id', id)
+      .update({ completed })
+      .update('updatedAt', knex.fn.now());
+    if (result === 1) {
+      reply.send({ message: 'todo complete toggle' });
+    }
+  } catch (err) {
+    reply.send({ message: `There was an error patching ${id} todolist: ${err}` });
   }
 });
 

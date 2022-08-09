@@ -1,11 +1,6 @@
-const API_HOST = 'http://127.0.0.1:8080';
 import axios from 'axios';
 
-export const ping = async () => {
-  const res = await fetch(`${API_HOST}/ping`, { mode: 'cors' });
-  const data = await res.json();
-  return data;
-};
+const API_HOST = 'http://127.0.0.1:8080';
 
 export const fetchTodos = async () => {
   try {
@@ -17,11 +12,14 @@ export const fetchTodos = async () => {
 };
 
 export const deleteTodo = async (id: number | undefined) => {
-  const res = await fetch(`todo/${id}`, {
-    method: 'DELETE',
-  });
-  const deleteResult = await res.json();
-  return deleteResult;
+  try {
+    const res = await fetch(`${API_HOST}/todo/${id}`, {
+      method: 'DELETE',
+    });
+    return res.status;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const addTodo = async (title: string, content: string) => {
@@ -31,7 +29,21 @@ export const addTodo = async (title: string, content: string) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, content }),
     });
-    return await res.json();
+    return res.status;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const completeTodo = async (id: number, completed: boolean) => {
+  console.log(completed);
+  try {
+    const res = await fetch(`${API_HOST}/todo/complete`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, completed }),
+    });
+    return res.status;
   } catch (e) {
     console.error(e);
   }

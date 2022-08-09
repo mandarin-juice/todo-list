@@ -1,17 +1,19 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
-import { addTodo, fetchTodos } from '../api';
+import { addTodo } from '../api';
 
 type TodoType = {
   id?: number;
   title: string;
   content?: string;
+  completed: number;
 };
 
 type FormProps = {
+  handleFetchTodos: () => void;
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
 };
 
-function Form({ setTodos }: FormProps) {
+function Form({ handleFetchTodos }: FormProps) {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
@@ -27,8 +29,10 @@ function Form({ setTodos }: FormProps) {
       return;
     }
 
-    await addTodo(title, content);
-    const result = await fetchTodos();
+    const resultCode = await addTodo(title, content);
+    if (resultCode === 200) {
+      handleFetchTodos();
+    }
     resetInputs();
   };
 

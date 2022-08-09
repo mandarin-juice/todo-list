@@ -22,7 +22,7 @@ knex.schema
           table.increments('id').primary();
           table.string('title');
           table.string('content');
-          table.integer('completed');
+          table.integer('completed').defaultTo(0);
           table.timestamp('updatedAt', { useTz: true });
           table.timestamp('createdAt').defaultTo(knex.fn.now());
         })
