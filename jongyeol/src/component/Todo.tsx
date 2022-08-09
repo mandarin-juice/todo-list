@@ -9,12 +9,16 @@ type TodoProps = {
   deleteTodo: (id: number | undefined) => void;
 };
 
-function Todo({ id, title, content, completed }: TodoProps) {
+function Todo({ id, title, content, completed, deleteTodo }: TodoProps) {
   const handleCompleteTodo = async (e: any) => {
     const resultCode = await completeTodo(e.target.name, e.target.checked);
     if (resultCode === 200) {
       fetchTodos();
     }
+  };
+
+  const handleDeleteTodo = () => {
+    deleteTodo(id);
   };
 
   return (
@@ -24,13 +28,13 @@ function Todo({ id, title, content, completed }: TodoProps) {
         <div>{content}</div>
       </Wrapper>
       <DeleteWrapper>
-        <DeleteButton>삭제</DeleteButton>
         <input
           type='checkbox'
           onChange={(e) => handleCompleteTodo(e)}
           name={id?.toString()}
           defaultChecked={!!completed}
         />
+        <DeleteButton onClick={handleDeleteTodo}>삭제</DeleteButton>
       </DeleteWrapper>
     </Container>
   );
@@ -55,7 +59,7 @@ const Wrapper = styled.div`
 
 const DeleteWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   flex: 2;
 `;
