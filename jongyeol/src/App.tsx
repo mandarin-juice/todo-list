@@ -1,67 +1,66 @@
-import React, { useEffect, useState } from "react";
-import Todo from "./Component/Todo";
-import Form from "./Component/Form";
-import styled from 'styled-components'
+import React, { useEffect, useState } from 'react';
+import Todo from './component/Todo';
+import Form from './component/Form';
+import styled from 'styled-components';
+import { deleteTodo, fetchTodos } from './api';
 
 type TodoType = {
-    id: number,
-    title: string,
-    content?: string
-}
+  id?: number;
+  title: string;
+  content?: string;
+  completed: number;
+};
 
 function App() {
-    const [todos, setTodos] = useState<TodoType[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [todos, setTodos] = useState<TodoType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        fetchTodos();
-    }, []);
+  useEffect(() => {
+    handleFetchTodos();
+  }, []);
 
-    const fetchTodos = async () => {
-        try {
-            const res = await fetch("/todos");
-            const data = await res.json();
-            setTodos(data.todos);
-        } catch (err) {
-            console.error('err:', err);
-        } finally {
-            setLoading(false);
-        }
+  const handleFetchTodos = async () => {
+    try {
+      const todos = await fetchTodos();
+      setTodos(todos);
+    } catch (err) {
+      console.error('err:', err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const deleteTodo = async (id: number) => {
-        try {
-            const res = await fetch(`todo/${id}`, {
-                method: 'DELETE',
-            });
-            const deleteResult = await res.json();
-            if (deleteResult.message === 'ok') {
-                fetchTodos();
-            }
-        } catch (err) {
-            console.error('err:', err);
-        }
+  const handleDeleteTodo = async (id: number | undefined) => {
+    const deleteResultCode = await deleteTodo(id);
+    if (deleteResultCode === 200) {
+      handleFetchTodos();
+    } else {
+      alert('삭제 실패');
     }
+  };
 
-    if (loading) {
-        return <h2>loading...</h2>
-    }
+  if (loading) {
+    return <h2>loading...</h2>;
+  }
 
-    return (
-        <Container>
-            <h1>TodoList</h1>
-            <Form setTodos={setTodos}/>
-             {todos?.map(todo => {
-                 return <Todo
-                     key={todo.title}
-                     id={todo.id}
-                     title={todo.title}
-                     content={todo?.content}
-                     deleteTodo={deleteTodo}
-                 />
-             })}
-        </Container>
-    )
+  return (
+    <Container>
+      <h1>TodoList</h1>
+      <Form setTodos={setTodos} handleFetchTodos={handleFetchTodos} />
+      {todos?.map((todo) => {
+        return (
+          <Todo
+            key={todo.title}
+            id={todo.id}
+            title={todo.title}
+            content={todo?.content}
+            completed={todo?.completed}
+            deleteTodo={handleDeleteTodo}
+          />
+        );
+      })}
+    </Container>
+  );
 }
 
 const Container = styled.div`
@@ -69,6 +68,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
+`;
 
 export default App;

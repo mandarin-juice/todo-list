@@ -19,3 +19,5 @@ try {
 } catch (err) {
   console.error(err);
 }
+
+export const todoRepository = AppDataSource.getRepository(Todo);

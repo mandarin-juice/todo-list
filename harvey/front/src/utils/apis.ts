@@ -1,7 +1,10 @@
 import { Todo, TodoState, TodoOnPage, PageState } from "../types";
 
+const IS_STAGING = process.env.REACT_APP_ENVIRONMENT === "staging";
+const URL = IS_STAGING ? "" : "";
+
 const updateTodoRequest = async (key: string, body: string) => {
-  return await fetch(`/todo/${key}`, {
+  return await fetch(`${URL}/todo/${key}`, {
     method: "put",
     headers: {
       "Content-Type": "application/json",
@@ -11,7 +14,7 @@ const updateTodoRequest = async (key: string, body: string) => {
 };
 
 const deleteTodoRequest = async (key: string) => {
-  return await fetch(`/todo/${key}`, {
+  return await fetch(`${URL}/todo/${key}`, {
     method: "delete",
     headers: {
       "Content-Type": "application/json",
@@ -20,12 +23,15 @@ const deleteTodoRequest = async (key: string) => {
 };
 
 const getTodos = async (state?: TodoState) => {
-  return await fetch(`/todos${state === undefined ? "" : `?state=${state}`}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  return await fetch(
+    `${URL}/todos${state === undefined ? "" : `?state=${state}`}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
     .then((response) => response.json())
     .then((data: Array<Todo>) => {
       const todoOnPage: Array<TodoOnPage> = data.map((todo) => ({
@@ -37,10 +43,10 @@ const getTodos = async (state?: TodoState) => {
 };
 
 const addTodo = async (todo: string) => {
-  return await fetch("/todo", {
+  return await fetch(`${URL}/todo`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
     },
     body: todo,
   }).then((response) => response.json());
