@@ -24,8 +24,8 @@ export async function updateTodo(params: UpdateTodoParams) {
   const todo = await AppDataSource.manager.findOneBy(Todo, { id });
   if (!todo) return;
 
-  todo.text = text ? text : todo.text;
-  todo.completed = completed ? completed : todo.completed;
+  todo.text = text;
+  todo.completed = completed;
   await AppDataSource.manager.save(todo);
   console.log("todo has been updated. todo id is", todo.id);
   return todo.id;
